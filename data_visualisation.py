@@ -36,22 +36,23 @@ class BasicModelDataVisualisation:
             
             # instantiate DataFrame to store calculated data
             df_kpercent = pd.DataFrame(columns=['gamma', 'kill percentage'])
-
+            S_data = []
             # for each value of gamma in the filtered data calculate the kill
             # percentage
             for gamma in self.gamma_vals:
                 data = df1.loc[df1['gamma'] == gamma]
                 S_vals = data['S'].values
+                S_data.append(S_vals)
                 for i in np.arange(0, len(S_vals)-1, 2):
-                    kill_percent = 1 - (S_vals[i + 1]/S_vals[i])
-                    df_kpercent = df_kpercent.append({'gamma' : gamma,
-                                               'kill percentage' : kill_percent},
-                                               ignore_index=True)
+                   kill_percent = 1 - (S_vals[i + 1]/S_vals[i])
+                   df_kpercent = df_kpercent.append({'gamma' : gamma,
+                                                    'kill percentage' : kill_percent},
+                                                    ignore_index=True)
             
             max_vals = []
             min_vals = []
             mean_vals = []
-
+            
             # calculate basic statistics of kill percentage values for each gamma
             for gamma in self.gamma_vals:
                 gamma_data = df_kpercent.loc[df_kpercent['gamma'] == gamma]
