@@ -7,12 +7,12 @@ from scipy.special import comb
 
 sns.set_theme()
 
-def prob_eqns (t, z, k_on, k_off, q_on, q_off, A0):
+def prob_eqns (t, z, k_on, k_off, q_on, q_off, A0, Ainit, C):
 
-    dn = k_on*A0*z[3]*(1-z[0]-z[2]) - k_off*z[0] - q_on*A0*z[0]*(1-z[1] - z[2]) + q_off*z[2]
-    dm = q_on*A0*z[3]*(1-z[1]-z[2]) - q_off*z[1] - k_on*A0*z[1]*(1-z[0]-z[2]) + k_off*z[2]
-    dalpha = q_on*A0*z[0]*(1-z[1]-z[2]) + k_on*A0*z[1]*(1-z[0]-z[2]) - (q_off + k_off)*z[2]
-    dA =- k_on*A0*z[3]*(1-z[0]-z[2]) + k_off*z[0] -  q_on*A0*z[3]*(1-z[1]-z[2]) + q_off*z[1]
+    dn = k_on*A0*(z[3]/1 - Ainit)*(1-z[0]-z[2]) - k_off*z[0] - q_on*A0*(z[0]/C)*(1-z[1] - z[2]) + q_off*z[2]
+    dm = q_on*A0*(z[3]/1 -Ainit)*(1-z[1]-z[2]) - q_off*z[1] - k_on*A0*(z[1]/C)*(1-z[0]-z[2]) + k_off*z[2]
+    dalpha = q_on*A0*(z[0]/C)*(1-z[1]-z[2]) + k_on*A0*(z[1]/C)*(1-z[0]-z[2]) - (q_off + k_off)*z[2]
+    dA = -k_on*A0*z[3]*((1-z[0]-z[2])/C) + k_off*z[0]*((1-Ainit)/C) -  q_on*A0*z[3]*((1-z[1]-z[2])/C) + q_off*z[1]*((1-Ainit)/C)
 
     dz = [dn, dm, dalpha, dA]
 
@@ -26,11 +26,17 @@ def bindings(i, prob, total_receptors):
     return comb(t_recep, i)*(prob**i)*((1-prob)**(t_recep - i))
 
 def solve_prob(t_end, k_on, k_off, q_on, q_off, A0):
+    n0 = 1
+    m0 = 0
+    alpha0 = 0
+    Ainit = 0
+    C = n0 + m0 + alpha0
+
     z0 = [1, 0, 0, 0]
     t = np.geomspace(1e-6, t_end, 10000)
     t_span = [0, t_end]
 
-    z = solve_ivp(prob_eqns, t_span, z0, args = (k_on, k_off, q_on, q_off, A0), method="Radau", t_eval=t)
+    z = solve_ivp(prob_eqns, t_span, z0, args = (k_on, k_off, q_on, q_off, A0, Ainit, C), method="Radau", t_eval=t)
 
     n_vals = z.y[0]
     m_vals = z.y[1]
@@ -38,6 +44,7 @@ def solve_prob(t_end, k_on, k_off, q_on, q_off, A0):
     n = n_vals[-1]
     m = m_vals[-1]
     alpha = alpha_vals[-1]
+    print(n, m, alpha)
     #plt.plot(z.t, z.y[0], label='n')
     #plt.plot(z.t, z.y[1], label='m')
     #plt.plot(z.t, z.y[2], label=r'$\alpha$')
