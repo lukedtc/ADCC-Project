@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 # base params
 Target_cell_number = 5e3
 
-t_end = 100
-t = np.geomspace(1e-8, t_end, 500)
+t_end = 10
+t = np.geomspace(1e-8, t_end, 100)
 tspan = [0, t_end]
 z0 = [0, 0]
 
@@ -43,7 +43,7 @@ def tumour_cell_stst(A0, delta, rtot, kon, koff):
     return [A1_stst, A2_stst]
 
 # synapse model
-def synapse_model(t, z, A0, delta2, rtot_t, kon, koff, rtot_f, qon, qoff, delta4, delta7):
+def synapse_model(t, z, A0, delta2, rtot_t, kon, koff, rtot_f, qon, qoff, delta4, delta7, A10_0, A20_0):
 
     Ainit = A0
     k = Ainit*kon
@@ -79,8 +79,8 @@ def synapse_model(t, z, A0, delta2, rtot_t, kon, koff, rtot_f, qon, qoff, delta4
     alpha7 = k7/k1off
     gamma7 = k7off/k1off
 
-    Atot = 1e16*Ainit/Target_cell_number
-    beta_t = Atot/rtot_t
+    beta_synapse = 1e1*Ainit
+    beta_t = beta_synapse + A10_0 + A20_0 
     phi = rtot_t/rtot_f
     beta_f = beta_t*phi
 
@@ -105,7 +105,7 @@ def calc_fc(A0, delta2, rtot_t, kon, koff, rtot_f, qon, qoff, delta4, delta7):
     z01 = [ICS[0], ICS[1], 0, 0, 0]
     t_span1 = [1e-10, tend1]
     
-    z = solve_ivp(synapse_model, t_span1, z01, method='Radau', t_eval=t1, args=(A0, delta2, rtot_t, kon, koff, rtot_f, qon, qoff, delta4, delta7))
+    z = solve_ivp(synapse_model, t_span1, z01, method='Radau', t_eval=t1, args=(A0, delta2, rtot_t, kon, koff, rtot_f, qon, qoff, delta4, delta7, ICS[0], ICS[1]))
 
     A11 = z.y[3]
     A21 = z.y[4]
@@ -132,7 +132,7 @@ problem = {
 # generate samples
 
 lost = []
-vals = saltelli.sample(problem, 512)
+vals = saltelli.sample(problem, 2048)
 
 Y = np.zeros(len(vals))
 indicies = []
@@ -184,7 +184,7 @@ print(lost[0])
 sns.set_theme()
 
 for i in range(len(data)):
-    #plt.plot(A0s, data[i], label=labels[i])
+    plt.plot(A0s, data[i], label=labels[i])
     plt.scatter(A0s, data[i])
 
 plt.xscale('log')

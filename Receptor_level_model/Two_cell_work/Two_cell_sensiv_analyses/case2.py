@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 # base params
 Target_cell_number = 5e3
-E_T_ratio = 1.25
+E_T_ratio = 20
 t_end = 100
 t = np.geomspace(1e-8, t_end, 500)
 tspan = [0, t_end]
@@ -72,7 +72,7 @@ def NK_cell_stst(A0, qon, koff, qoff, rtot_f, rtot_t, A1_stst, A2_stst):
     return A01_IC[-1]
 
 # synapse model
-def synapse_model(t, z, A0, delta2, rtot_t, kon, koff, rtot_f, qon, qoff, delta4, delta7):
+def synapse_model(t, z, A0, delta2, rtot_t, kon, koff, rtot_f, qon, qoff, delta4, delta7, A10_0, A20_0, A01_0):
 
     Ainit = A0
     k = Ainit*kon
@@ -108,10 +108,10 @@ def synapse_model(t, z, A0, delta2, rtot_t, kon, koff, rtot_f, qon, qoff, delta4
     alpha7 = k7/k1off
     gamma7 = k7off/k1off
 
-    Atot = 1e16*Ainit/Target_cell_number
-    beta_t = Atot/rtot_t
+    beta_synapse = 1e1*Ainit
     phi = rtot_t/rtot_f
-    beta_f = beta_t*phi
+    beta_t = beta_synapse + A10_0 + A20_0 + (A01_0/phi)
+    beta_f = phi*beta_t
 
     A00 = 1 - (1/beta_t)*(z[0] + z[1] + z[3] + z[4]) - (1/beta_f)*z[2]
     rt = 1- z[0] - z[3] - 2*(z[1] + z[4])
@@ -136,7 +136,7 @@ def calc_fc(A0, delta2, rtot_t, kon, koff, rtot_f, qon, qoff, delta4, delta7):
     z02 = [ICS[0], ICS[1], A01_IC, 0, 0]
     
     # solve synapse model with ICS from previous calculations
-    z = solve_ivp(synapse_model, t_span2, z02, method='Radau', t_eval=t2, args=(A0, delta2, rtot_t, kon, koff, rtot_f, qon, qoff, delta4, delta7))
+    z = solve_ivp(synapse_model, t_span2, z02, method='Radau', t_eval=t2, args=(A0, delta2, rtot_t, kon, koff, rtot_f, qon, qoff, delta4, delta7, ICS[0], ICS[1], A01_IC))
 
     A11 = z.y[3]
     A21 = z.y[4]
@@ -163,7 +163,7 @@ problem = {
 # generate samples
 
 lost = []
-vals = saltelli.sample(problem, 512)
+vals = saltelli.sample(problem, 2048)
 
 Y = np.zeros(len(vals))
 indicies = []
