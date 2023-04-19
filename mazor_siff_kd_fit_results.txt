@@ -1,0 +1,48 @@
+[[Variables]]
+    rtot_1:  3496.20749 +/- 250.702557 (7.17%) (init = 10000)
+    kon_1:   310000 (fixed)
+    k2_1:    213.564668 +/- 4.72694651 (2.21%) (init = 200)
+    koff_1:  3.4885e-04 +/- 5.3396e-04 (153.06%) (init = 0.00024)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(k2_1, koff_1) = -0.860
+None
+[[Variables]]
+    rtot_1:  11985.3852 +/- 34.6988903 (0.29%) (init = 10000)
+    kon_1:   260000 (fixed)
+    k2_1:    5.68611456 +/- 0.24953318 (4.39%) (init = 200)
+    koff_1:  0.55495448 +/- 0.01101326 (1.98%) (init = 0.00048)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(k2_1, koff_1)   = 0.651
+    C(rtot_1, k2_1)   = 0.609
+    C(rtot_1, koff_1) = 0.551
+None
+[[Variables]]
+    rtot_1:  12405.7860 +/- 65.9133118 (0.53%) (init = 10000)
+    kon_1:   300000 (fixed)
+    k2_1:    8.33854145 +/- 0.68743557 (8.24%) (init = 200)
+    koff_1:  0.72857577 +/- 0.02712977 (3.72%) (init = 0.0027)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(k2_1, koff_1)   = 0.690
+    C(rtot_1, k2_1)   = 0.649
+    C(rtot_1, koff_1) = 0.593
+None
+[[Variables]]
+    rtot_1:  13373.2305 +/- 53.4034997 (0.40%) (init = 10000)
+    kon_1:   380000 (fixed)
+    k2_1:    8.69676628 +/- 0.51407127 (5.91%) (init = 200)
+    koff_1:  0.62738771 +/- 0.01813238 (2.89%) (init = 0.0085)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(k2_1, koff_1)   = 0.733
+    C(rtot_1, k2_1)   = 0.644
+    C(rtot_1, koff_1) = 0.597
+None
+[[Variables]]
+    rtot_1:  13402.2044 +/- 64.8877555 (0.48%) (init = 10000)
+    kon_1:   330000 (fixed)
+    k2_1:    11.5600373 +/- 0.89138874 (7.71%) (init = 200)
+    koff_1:  0.88968497 +/- 0.03023763 (3.40%) (init = 0.096)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(k2_1, koff_1)   = 0.746
+    C(rtot_1, k2_1)   = 0.708
+    C(rtot_1, koff_1) = 0.655
+None
