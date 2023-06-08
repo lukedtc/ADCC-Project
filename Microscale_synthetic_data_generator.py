@@ -68,11 +68,13 @@ class DataGenerator():
 
        A1 = np.asarray(sol.y[0])
        A2 = np.asarray(sol.y[1])
+       Ab1 = A1 + A2
+       Ab = np.zeros_like(Ab1)
+       noise = (np.random.normal(1, noise_level, len(Ab1))) 
+       for i in range(len(Ab)):
+           Ab[i] = Ab1[i]*noise[i]
 
-       A1 = A1*(1 + np.random.uniform(-noise_level, noise_level))
-       A2 = A2*(1 + np.random.uniform(-noise_level, noise_level))
-
-       return [A1, A2]
+       return Ab
     
     def generate_steady_states(self, Ainit_array, model_name, noise_level):
        
